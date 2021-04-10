@@ -5,6 +5,7 @@ import (
 	"log"
 	"math"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/tacotokyo/bybit-auto-compound/api"
@@ -34,6 +35,7 @@ func start(bybit *api.BybitApi, coin string) {
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
+	time.Sleep(time.Second)
 	pos, err := bybit.Positions(coin)
 	if err != nil {
 		log.Fatalf("%v", err)
@@ -55,11 +57,11 @@ func start(bybit *api.BybitApi, coin string) {
 		log.Fatalf("%v", err)
 	}
 	log.Printf("%s available balance: %v", coin, bal)
-	ask, bid, err := bybit.Price(coin)
+	ask, _, err := bybit.Price(coin)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
-	if bal*bid > 1 {
+	if bal*ask > 1 {
 		size := int64(math.Floor(ask * bal))
 		log.Printf("order: %s short price: %v size: %v", coin, ask, size)
 		id, err := bybit.Sell(coin, ask, size)

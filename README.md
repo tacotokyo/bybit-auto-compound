@@ -8,7 +8,7 @@ This CLI maintain Inverse Perpetual short position into leverage x1 in order to 
 
 ```
 mkdir bybit && cd bybit
-wget https://github.com/tacotokyo/bybit-auto-compound/releases/download/v0.2/bybit-auto-compound-linux
+wget https://github.com/tacotokyo/bybit-auto-compound/releases/download/v0.4/bybit-auto-compound-linux
 chmod +x bybit-auto-compound-linux
 ```
 
