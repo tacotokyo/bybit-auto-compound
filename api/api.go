@@ -123,6 +123,26 @@ func (b *BybitApi) CancelAll(coin string) error {
 	return err
 }
 
+type leverageResult struct {
+	RetCode float64 `json:"ret_code"`
+}
+
+func (b *BybitApi) LeverageX1(coin string) error {
+	param := b.getParameterMap()
+	param["symbol"] = strings.ToUpper(coin) + "USD"
+	param["leverage"] = 1
+	body, err := b.httpPost("/v2/private/position/leverage/save", param)
+	if err != nil {
+		return err
+	}
+	var m cancelResult
+	err = json.Unmarshal(body, &m)
+	if m.RetCode != 0 {
+		return fmt.Errorf("Api Position Leverage error: %#v", string(body))
+	}
+	return err
+}
+
 type orderResult struct {
 	RetCode float64 `json:"ret_code"`
 	Result  struct {
@@ -150,6 +170,32 @@ func (b *BybitApi) Sell(coin string, price float64, size int64) (string, error) 
 	return m.Result.OrderID, err
 }
 
+type tickerResult struct {
+	RetCode float64 `json:"ret_code"`
+	Result  []struct {
+		Symbol   string `json:"symbol"`
+		BidPrice string `json:"bid_price"`
+		AskPrice string `json:"ask_price"`
+	} `json:"result"`
+}
+
+func (b *BybitApi) Price(coin string) (ask, bid float64, err error) {
+	param := map[string]interface{}{
+		"symbol": strings.ToUpper(coin) + "USD",
+	}
+	body, err := b.httpGetNoAuth("/v2/public/tickers", param)
+	if err != nil {
+		return
+	}
+	var m tickerResult
+	err = json.Unmarshal(body, &m)
+	if m.RetCode != 0 {
+		err = fmt.Errorf("Api Tickers error: %#v", string(body))
+		return
+	}
+	return toFloat64(m.Result[0].AskPrice), toFloat64(m.Result[0].BidPrice), err
+}
+
 func toFloat64(v string) float64 {
 	f, err := strconv.ParseFloat(v, 64)
 	if err != nil {
@@ -174,6 +220,33 @@ func nowUnixMilliSec() string {
 func (b *BybitApi) httpGet(path string, query map[string]interface{}) ([]byte, error) {
 	sign, querystr := b.getSignature(query)
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s%s?%s&sign=%s", baseUrl, path, querystr, sign), nil)
+	if err != nil {
+		log.Println("http req error:", err)
+		return nil, err
+	}
+	resp, err := c.Do(req)
+	if err != nil {
+		log.Println("http res error:", err)
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("http res body error:", err)
+		return nil, err
+	}
+	return body, nil
+}
+
+func (b *BybitApi) httpGetNoAuth(path string, query map[string]interface{}) ([]byte, error) {
+	querystr := ""
+	for _, k := range sortedKeys(query) {
+		querystr += fmt.Sprintf("%v=%v&", k, query[k])
+	}
+	querystr = querystr[0 : len(querystr)-1]
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s%s?%s", baseUrl, path, querystr), nil)
 	if err != nil {
 		log.Println("http req error:", err)
 		return nil, err

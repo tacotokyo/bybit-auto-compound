@@ -36,6 +36,20 @@ func TestSell(t *testing.T) {
 	log.Printf("%v %v", id, err)
 }
 
+func TestLeverageX1(t *testing.T) {
+	key, secret := keysecret(t)
+	api := New(key, secret)
+	err := api.LeverageX1("eos")
+	log.Printf("%v", err)
+}
+
+func TestPrice(t *testing.T) {
+	key, secret := keysecret(t)
+	api := New(key, secret)
+	ask, bid, err := api.Price("eos")
+	log.Printf("%v %v %v", ask, bid, err)
+}
+
 func keysecret(t *testing.T) (key, secret string) {
 	godotenv.Load()
 	key = os.Getenv("TEST_BYBIT_KEY")
