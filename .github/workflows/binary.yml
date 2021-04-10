@@ -13,5 +13,27 @@ jobs:
         go-version: 1.16.x
     - name: Checkout code
       uses: actions/checkout@v2
+
     - name: Linux build
       run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o bybit-auto-compound-linux
+    - name: Upload Linux build
+      uses: actions/upload-artifact@v2
+      with:
+        name: bybit-auto-compound-linux
+        path: bybit-auto-compound-linux
+
+    - name: OSX build
+      run: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -a -o bybit-auto-compound-darwin
+    - name: Upload OSX build
+      uses: actions/upload-artifact@v2
+      with:
+        name: bybit-auto-compound-darwin
+        path: bybit-auto-compound-darwin
+
+    - name: Windows build
+      run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -a -o bybit-auto-compound-windows
+    - name: Upload Windows build
+      uses: actions/upload-artifact@v2
+      with:
+        name: bybit-auto-compound-windows
+        path: bybit-auto-compound-windows
