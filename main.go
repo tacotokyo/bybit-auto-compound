@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"math"
 	"os"
@@ -31,7 +30,7 @@ func main() {
 
 	cc := strings.Split(*coins, ",")
 	for i := 0; i < len(cc); i++ {
-		start(bybit, fmt.Sprintf("%q", cc[i]))
+		start(bybit, strings.TrimSpace(cc[i]))
 	}
 }
 
