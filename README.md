@@ -7,6 +7,7 @@ This CLI maintain Inverse Perpetual short position into leverage x1 in order to 
 1. Download binary from [here](https://github.com/tacotokyo/bybit-auto-compound/releases)
 
 ```
+mkdir bybit && cd bybit
 wget https://github.com/tacotokyo/bybit-auto-compound/releases/download/v0.2/bybit-auto-compound-linux
 chmod +x bybit-auto-compound-linux
 ```
@@ -19,5 +20,5 @@ wget -O .env https://raw.githubusercontent.com/tacotokyo/bybit-auto-compound/mai
 
 3. Setup cron
 ```
-* * * * * /root/bybit-auto-compound -coin xrp -envfile /root/.env
+* * * * * /root/bybit/bybit-auto-compound-linux -coin xrp -envfile /root/bybit/.env 2>/root/bybit/bybit-auto-compound.log
 ```
