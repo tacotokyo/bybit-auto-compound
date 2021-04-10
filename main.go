@@ -62,14 +62,17 @@ func start(bybit *api.BybitApi, coin string) {
 	if bal*bid > 1 {
 		size := int64(math.Floor(ask * bal))
 		log.Printf("order: %s short price: %v size: %v", coin, ask, size)
-		bybit.Sell(coin, ask, size)
+		id, err := bybit.Sell(coin, ask, size)
+		if err != nil {
+			log.Fatalf("%v", err)
+		}
+		log.Printf("ordered: %s", id)
 	} else {
 		log.Printf("no available balance. skip order")
 	}
 }
 
 func keysecret() (key, secret string) {
-	godotenv.Load()
 	key = os.Getenv("MAIN_BYBIT_KEY")
 	secret = os.Getenv("MAIN_BYBIT_SECRET")
 	if key == "" && secret == "" {
