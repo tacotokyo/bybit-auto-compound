@@ -2,9 +2,11 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"math"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -13,10 +15,10 @@ import (
 
 func main() {
 	envfile := flag.String("envfile", "", "env file path (e.g. /path/to/.env)")
-	coin := flag.String("coin", "", "target coin (e.g. BTC, ETH)")
+	coins := flag.String("coin", "", "target coin (e.g. BTC, ETH)")
 	flag.Parse()
 
-	if *envfile == "" || *coin == "" {
+	if *envfile == "" || *coins == "" {
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
@@ -26,7 +28,11 @@ func main() {
 	}
 	key, secret := keysecret()
 	bybit := api.New(key, secret)
-	start(bybit, *coin)
+
+	cc := strings.Split(*coins, ",")
+	for i := 0; i < len(cc); i++ {
+		start(bybit, fmt.Sprintf("%q", cc[i]))
+	}
 }
 
 func start(bybit *api.BybitApi, coin string) {
