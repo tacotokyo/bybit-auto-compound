@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"math"
 	"os"
@@ -10,10 +11,24 @@ import (
 )
 
 func main() {
-	godotenv.Load()
+	envfile := flag.String("envfile", "", "env file path (e.g. /path/to/.env)")
+	coin := flag.String("coin", "", "target coin (e.g. BTC, ETH)")
+	flag.Parse()
+
+	if *envfile == "" || *coin == "" {
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+	err := godotenv.Load(*envfile)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
 	key, secret := keysecret()
 	bybit := api.New(key, secret)
-	coin := "xrp"
+	start(bybit, *coin)
+}
+
+func start(bybit *api.BybitApi, coin string) {
 	log.Printf("cancel all orders: %s", coin)
 	err := bybit.CancelAll(coin)
 	if err != nil {

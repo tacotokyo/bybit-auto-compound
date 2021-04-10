@@ -31,7 +31,7 @@ jobs:
     #     path: bybit-auto-compound-darwin
 
     - name: Windows build
-      run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -a -o bybit-auto-compound-windows
+      run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -a -o bybit-auto-compound-windows.exe
     # - name: Upload Windows build
     #   uses: actions/upload-artifact@v2
     #   with:
@@ -45,6 +45,6 @@ jobs:
         files: |
           bybit-auto-compound-linux
           bybit-auto-compound-darwin
-          bybit-auto-compound-windows
+          bybit-auto-compound-windows.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
