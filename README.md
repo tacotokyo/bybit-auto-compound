@@ -20,5 +20,5 @@ wget -O .env https://raw.githubusercontent.com/tacotokyo/bybit-auto-compound/mai
 
 3. Setup cron
 ```
-* * * * * /root/bybit/bybit-auto-compound-linux -coin xrp -envfile /root/bybit/.env 2>/root/bybit/bybit-auto-compound.log
+*/10 * * * * /root/bybit/bybit-auto-compound-linux -coin xrp -envfile /root/bybit/.env 2>/root/bybit/bybit-auto-compound.log
 ```
