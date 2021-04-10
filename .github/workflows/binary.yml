@@ -16,24 +16,34 @@ jobs:
 
     - name: Linux build
       run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o bybit-auto-compound-linux
-    - name: Upload Linux build
-      uses: actions/upload-artifact@v2
-      with:
-        name: bybit-auto-compound-linux
-        path: bybit-auto-compound-linux
+    # - name: Upload Linux build
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: bybit-auto-compound-linux
+    #     path: bybit-auto-compound-linux
 
     - name: OSX build
       run: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -a -o bybit-auto-compound-darwin
-    - name: Upload OSX build
-      uses: actions/upload-artifact@v2
-      with:
-        name: bybit-auto-compound-darwin
-        path: bybit-auto-compound-darwin
+    # - name: Upload OSX build
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: bybit-auto-compound-darwin
+    #     path: bybit-auto-compound-darwin
 
     - name: Windows build
       run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -a -o bybit-auto-compound-windows
-    - name: Upload Windows build
-      uses: actions/upload-artifact@v2
+    # - name: Upload Windows build
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: bybit-auto-compound-windows
+    #     path: bybit-auto-compound-windows
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
       with:
-        name: bybit-auto-compound-windows
-        path: bybit-auto-compound-windows
+        files: |
+          bybit-auto-compound-linux
+          bybit-auto-compound-darwin
+          bybit-auto-compound-windows
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
