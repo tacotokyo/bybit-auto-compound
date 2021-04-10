@@ -1,0 +1,1 @@
+# bybit-auto-compound
